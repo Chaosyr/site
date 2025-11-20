@@ -11,6 +11,9 @@ const config = {
 		adapter: adapter(),
 		paths: {
 			base: process.env.GITHUB_ACTIONS === "true" ? "/site" : ""
+		},
+		prerender: {
+			handleHttpError: "ignore"
 		}
 	},
 	extensions: [".svelte", ".svx"]
