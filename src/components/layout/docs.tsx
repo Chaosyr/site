@@ -97,7 +97,7 @@ function Header() {
           <div className="absolute left-1/2 transform -translate-x-1/2 bg-coral-400 hidden items-center gap-2 rounded-full px-4 py-1.5 md:flex">
             <TriangleAlert className="h-3.5 w-3.5 text-red-800" />
             <span className="text-xs font-medium text-red-800">
-              Documentation in Progress!
+              Documentation WIP!
             </span>
             <span className="text-[10px] text-red-700">
               documentation @ 2de03df
