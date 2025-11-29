@@ -24,7 +24,7 @@ jobs:
         env:
           WEBLATE_API_TOKEN: ${{ secrets. WEBLATE_API_TOKEN }}
           WEBLATE_PROJECT: hytale-modding
-          WEBLATE_URL: https://hosted.weblate.org
+          WEBLATE_URL: https://translate.hytalemodding.xyz
         run: node scripts/weblate-upload.js
       
       - name: Commit extracted translations
