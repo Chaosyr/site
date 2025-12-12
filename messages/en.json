@@ -14,6 +14,7 @@
 
   "misc": {
     "loading": "Loading...",
+    "members": "Members",
     "gitInfoUnavailable": "Git info not available"
   }
 }

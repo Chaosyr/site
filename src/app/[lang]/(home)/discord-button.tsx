@@ -38,12 +38,12 @@ export function DiscordButton() {
         Join The Community
         <div className="absolute top-full mt-2 flex">
           {isLoading ? (
-            <p className="text-muted-foreground text-sm">Loading...</p>
+            <p className="text-muted-foreground text-sm">{messages.misc.loading}</p>
           ) : stats ? (
             <p className="text-muted-foreground flex items-center gap-1 text-sm">
               <span className="flex gap-1 text-green-400">
                 <CircleUserIcon className="my-auto" />
-                {stats.total_members} Members 
+                {stats.total_members} {messages.misc.members} 
               </span>
             </p>
           ) : null}
