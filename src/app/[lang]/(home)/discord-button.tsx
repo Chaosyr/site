@@ -4,6 +4,7 @@ import { CircleUserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { getDiscordStats } from "./actions";
+import Link from "next/link";
 
 export function DiscordButton() {
   const [stats, setStats] = useState<{
@@ -26,7 +27,7 @@ export function DiscordButton() {
 
   return (
     <Button className="relative" asChild>
-      <a 
+      <Link
         href="https://discord.gg/hytalemodding" 
         target="_blank" 
         rel="noopener noreferrer"
@@ -45,7 +46,7 @@ export function DiscordButton() {
             </p>
           ) : null}
         </div>
-      </a>
+      </Link>
     </Button>
   );
 }

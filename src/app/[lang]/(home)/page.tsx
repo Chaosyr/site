@@ -1,5 +1,5 @@
 "use client";
-import { ExternalLinkIcon, BookIcon, Link, Anchor } from "lucide-react";
+import { ExternalLinkIcon, BookIcon } from "lucide-react";
 import { FlipWords } from "@/components/ui/flip-words";
 import { Spotlight } from "@/components/ui/spotlight-new";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import Image, { StaticImageData } from "next/image";
 import { useEffect, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import { localizeHref } from "@/lib/locale";
+import Link from "next/link";
 
 import WulfrumProsthesis from "./(showcaseImages)/wulfrum_prosthesis.png";
 import DragonFlyMount from "./(showcaseImages)/dragonfly_mount.gif";
@@ -93,9 +94,9 @@ export default function HomePage({ params }: { params: { lang?: string } }) {
           </h2>
           <div className="flex flex-wrap gap-4">
             <Button asChild>
-              <a href={localizeHref("/docs", params.lang?.toString())}>
+              <Link href={localizeHref("/docs", params.lang?.toString())}>
                 <BookIcon /> Docs
-              </a>
+              </Link>
             </Button>
             <DiscordButton />
           </div>
@@ -130,7 +131,9 @@ export default function HomePage({ params }: { params: { lang?: string } }) {
                             </h2>
                           </div>
                           <Button size="icon-lg">
-                            <ExternalLinkIcon />
+                            <a href={item.link} target="_blank" rel="noopener noreferrer">
+                              <ExternalLinkIcon />
+                            </a>
                           </Button>
                         </div>
                         <Image
