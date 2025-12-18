@@ -4,6 +4,7 @@ import {
   DocsDescription,
   DocsPage,
   DocsTitle,
+  PageLastUpdate,
 } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
 import { getMDXComponents } from "@/mdx-components";
@@ -20,6 +21,7 @@ export default async function Page(
   if (!page) notFound();
 
   const MDX = page.data.body;
+  const lastModified = page.data.lastModified;
 
   return (
     <ViewTransition enter="docs-transition" exit="docs-transition">
@@ -43,6 +45,9 @@ export default async function Page(
             })}
           />
         </DocsBody>
+        {lastModified && (
+          <PageLastUpdate date={lastModified} />
+        )}
       </DocsPage>
     </ViewTransition>
   );
