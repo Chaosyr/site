@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 const featuredSponsors = [
   {
     name: 'Template until we have a sponsor',
-    logo: '/branding/logo-light-348.png',
+    image: '/branding/logo-light-348.png',
     url: 'https://hytalemodding.guide',
   },
 ];
@@ -19,7 +19,7 @@ const featuredSponsors = [
 const staticSponsors = [
   {
     name: 'ApexHosting',
-    logo: '/sponsors/apexhosting.png',
+    image: '/sponsors/apexhosting.png',
     url: 'https://apexminecrafthosting.com',
   },
 ];
@@ -94,7 +94,7 @@ export default function SponsorsPage() {
           <div className="space-y-2">
             <div className="flex flex-wrap gap-3">
               {sponsors.map((sponsor) => {
-                const logoSrc = sponsor.logo || sponsor.image;
+                const logoSrc = sponsor.image;
                 if (!logoSrc) return null;
                 
                 return (
