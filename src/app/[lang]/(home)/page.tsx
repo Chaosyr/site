@@ -1,5 +1,5 @@
 "use client";
-import { ExternalLinkIcon, BookIcon, MessageSquare } from "lucide-react";
+import { ExternalLinkIcon, BookIcon, MessageSquare, ArrowUpRightIcon } from "lucide-react";
 import { FlipWords } from "@/components/ui/flip-words";
 import { Spotlight } from "@/components/ui/spotlight-new";
 import { Button } from "@/components/ui/button";
@@ -301,7 +301,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="mt-auto mb-8 w-full py-16 md:mb-4">
+      <div className="mt-auto mb-8 w-full py-8 md:mb-4">
         <Marquee className="h-64 w-full">
           <MarqueeFade side="left" className="w-12" />
           <MarqueeContent speed={50} pauseOnHover autoFill={false}>
@@ -313,6 +313,17 @@ export default function HomePage() {
           </MarqueeContent>
           <MarqueeFade side="right" className="w-12" />
         </Marquee>
+
+        <div className="flex justify-center mt-6">
+          <Button asChild>
+            <Link
+              href={params?.lang?.toString() + "/projects"}
+            >
+              <ArrowUpRightIcon className="mr-2 h-4 w-4" />
+              View More Projects
+            </Link>
+          </Button>
+        </div>
       </div>
     </div>
   );
