@@ -1,0 +1,217 @@
+---
+title: "Setting Up Your Development Environment"
+description: "Learn how to set up your development environment for modding Hytale."
+authors:
+    - name: "Neil Revin"
+      link: "https://itsneil.dev"
+---
+
+<Callout>
+    This Callout is for anyone looking at this page or translators - this page is NOT READY! Please do not translate this file at all, including this message. Thank you
+</Callout>
+
+# Setting Up Your Development Environment
+
+This guide will walk you through setting up a complete development environment for Hytale modding, including all necessary tools and dependencies.
+
+## Prerequisites
+
+Before we begin, make sure you have:
+- A computer running Windows 10/11, macOS, or Linux
+- At least 8GB of RAM
+- 10GB of free disk space
+- Administrative privileges on your system
+
+## Required Software
+
+### 1. Java Development Kit (JDK)
+
+Hytale modding requires Java 25 or later. We recommend using OpenJDK.
+
+#### Windows
+1. Download OpenJDK 25 from [Adoptium](https://adoptium.net/)
+2. Run the installer with default settings
+3. Verify installation by opening Command Prompt and running:
+```bash
+java -version
+```
+
+#### macOS
+```bash
+# Using Homebrew
+brew install openjdk@25
+```
+
+#### Linux (Ubuntu/Debian)
+```bash
+sudo apt update
+sudo apt install openjdk-25-jdk
+```
+
+### 2. Integrated Development Environment (IDE)
+
+We recommend IntelliJ IDEA Community Edition for Hytale modding.
+
+1. Download from [JetBrains website](https://www.jetbrains.com/idea/download/)
+2. Install with default settings
+3. Launch and complete the initial setup wizard
+
+**Image suggestion: IntelliJ IDEA welcome screen or main interface**
+
+### 3. Git Version Control
+
+#### Windows
+Download Git from [git-scm.com](https://git-scm.com/download/win) and install with default settings.
+
+#### macOS
+```bash
+# Using Homebrew
+brew install git
+```
+
+#### Linux
+```bash
+# Ubuntu/Debian
+sudo apt install git
+
+# Fedora/CentOS
+sudo dnf install git
+```
+
+Verify installation:
+```bash
+git --version
+```
+
+## Setting Up Your Workspace
+
+### 1. Create Project Directory
+
+Create a dedicated folder for your Hytale mods:
+
+```bash
+mkdir ~/HytaleModding
+cd ~/HytaleModding
+```
+
+### 2. Configure Git
+
+Set up your Git identity:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+### 3. Install Hytale SDK (When Available)
+
+Once Hytale releases their official SDK:
+
+1. Download the SDK from the official Hytale website
+2. Extract to your HytaleModding directory
+3. Follow the SDK-specific installation instructions
+
+**Image suggestion: Placeholder showing where SDK files would be located**
+
+## IDE Configuration
+
+### Setting up IntelliJ IDEA
+
+1. **Configure JDK:**
+   - Go to File → Project Structure → Project Settings → Project
+   - Set Project SDK to your installed JDK 17
+
+**Image: IntelliJ Project Structure dialog with JDK settings**
+
+2. **Install Useful Plugins:**
+   - Go to File → Settings → Plugins
+   - Install recommended plugins:
+     - Minecraft Development (if available)
+     - GitToolBox
+     - Rainbow Brackets
+
+**Image: IntelliJ Plugins marketplace showing recommended plugins**
+
+3. **Configure Code Style:**
+   - Go to File → Settings → Editor → Code Style
+   - Set up consistent formatting rules for your team
+
+## Environment Variables
+
+Set up environment variables for easier development:
+
+### Windows
+```cmd
+setx JAVA_HOME "C:\Program Files\Eclipse Adoptium\jdk-25.0.x.x-hotspot"
+setx PATH "%PATH%;%JAVA_HOME%\bin"
+```
+
+### macOS/Linux
+Add to your `~/.bashrc` or `~/.zshrc`:
+```bash
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+export PATH=$JAVA_HOME/bin:$PATH
+```
+
+**Image: Environment variables dialog on Windows or terminal showing export commands**
+
+## Testing Your Setup
+
+Create a simple test to verify everything works:
+
+1. Create a new directory: `mkdir test-project && cd test-project`
+2. Create a simple Java file:
+
+```java
+public class HytaleTest {
+    public static void main(String[] args) {
+        System.out.println("Hytale modding environment ready!");
+    }
+}
+```
+
+3. Compile and run:
+```bash
+javac HytaleTest.java
+java HytaleTest
+```
+
+You should see: `Hytale modding environment ready!`
+
+**Image suggestion: Terminal output showing successful compilation and execution**
+
+## Next Steps
+
+With your development environment set up, you're ready to:
+
+- Create your first Hytale mod
+- Explore the Hytale SDK documentation
+- Join the modding community
+- Set up version control for your projects
+
+## Troubleshooting
+
+### Common Issues
+
+**Java not found:**
+- Verify JAVA_HOME is set correctly
+- Check PATH includes Java bin directory
+- Restart your terminal/IDE
+
+**IDE won't start:**
+- Check system requirements
+- Verify JDK installation
+- Try running as administrator
+
+**Git commands fail:**
+- Ensure Git is in your PATH
+- Check internet connection for remote operations
+
+**Image suggestion: Screenshot showing common error messages and their solutions**
+
+## Additional Resources
+
+- [Official Hytale Website](https://hytale.com)
+- [Hytale Modding Documentation](https://hytalemodding.dev)
+- [Community Discord](https://discord.gg/hytalemodding)
+- [Example Mod Repository](#) (when available)

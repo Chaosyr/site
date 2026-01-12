@@ -1,5 +1,5 @@
 {
   "title": "{meta.guides.title}",
-  "pages": ["...", "java-basics"],
+  "pages": ["...", "java-basics", "!3d-modeling"],
   "icon": "GraduationCap"
 }
