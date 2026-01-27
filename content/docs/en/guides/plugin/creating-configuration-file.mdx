@@ -64,11 +64,7 @@ In your project's `JavaPlugin` class, you should load the configuration file in 
 You should also call `save()` on the `Config<T>` in the setup, to ensure that the configuration file is created if it doesn't exist.
 ```java
 public class ExamplePlugin extends JavaPlugin {
-    private final Config<MyConfig> config;
-
-    public ExamplePlugin(){
-        config = this.withConfig("MyConfig", MyConfig.CODEC);
-    }
+    private final Config<MyConfig> config = this.withConfig("MyConfig", MyConfig.CODEC);
 
     @Override
     public void setup() {
