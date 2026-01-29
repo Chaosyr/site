@@ -308,7 +308,7 @@ export default function HomePage() {
         <div className="max-w-5xl space-y-8 pt-16 text-center md:pt-0">
           <ViewTransition name="hero" share="blur-scale-transition">
             <div className="space-y-6">
-              <div className="relative w-lg mx-auto">
+              <div className="relative mx-auto w-lg">
                 <GlowEffect
                   colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
                   mode="flowHorizontal"
@@ -316,10 +316,15 @@ export default function HomePage() {
                   duration={3}
                   scale={0.9}
                 />
-                <Button className="relative w-115 bg-background hover:bg-background/85" variant={"secondary"} asChild>
-                <Link href={"https://hytalemodjam.com"}>
-                  We&apos;re hosting the first Hytale Modjam with 4,000$ in prizes! <ArrowRightIcon className="h4 w-4" />
-                </Link>
+                <Button
+                  className="bg-background hover:bg-background/85 relative w-115"
+                  variant={"secondary"}
+                  asChild
+                >
+                  <Link href={"https://hytalemodjam.com"}>
+                    We&apos;re hosting the first Hytale Modjam with 4,000$ in
+                    prizes! <ArrowRightIcon className="h4 w-4" />
+                  </Link>
                 </Button>
               </div>
               <h1 className="text-4xl font-semibold text-balance md:text-5xl">
