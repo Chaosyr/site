@@ -19,6 +19,12 @@ const featuredSponsors: Sponsor[] = [
     image: "/sponsors/bisecthosting.png",
     website: "https://bisecthosting.com",
   },
+  {
+    MemberId: "FiveManage",
+    name: "FiveManage",
+    image: "/sponsors/fivemanage.png",
+    website: "https://fivemanage.com",
+  }
 ];
 
 const staticSponsors: Sponsor[] = [
