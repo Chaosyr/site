@@ -31,35 +31,35 @@ And now we add another action to the **Random** action list to move to the **Sle
 
 ```json
 {
-	"Sensor": {
-		"Type": "State",
-		"State": ".Default"
-	},
-	"Instructions": [
-		{
-			"Actions": [
-				{
-					"Type": "Random",
-					"Actions": [
-						{
-							"Weight": 80,
-							"Action": {
-								"Type": "State",
-								"State": ".Guard"
-							}
-						},
-						{
-							"Weight": 20,
-							"Action": {
-								"Type": "State",
-								"State": "Sleep"
-							}
-						}
-					]
-				}
-			]
-		}
-	]
+  "Sensor": {
+    "Type": "State",
+    "State": ".Default"
+  },
+  "Instructions": [
+    {
+      "Actions": [
+        {
+          "Type": "Random",
+          "Actions": [
+            {
+              "Weight": 80,
+              "Action": {
+                "Type": "State",
+                "State": ".Guard"
+              }
+            },
+            {
+              "Weight": 20,
+              "Action": {
+                "Type": "State",
+                "State": "Sleep"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 ```
 

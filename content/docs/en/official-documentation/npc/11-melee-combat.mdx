@@ -12,24 +12,22 @@ For the purpose of this Tutorial we'll focus only on the melee attack. We'll sta
 This will also allow for a quick look into the adjacent Interactions system. First we need to create a **Root Interaction** in **HytaleAssets/Server/Item/RootInteractions**, together with other Root interactions. Let's make a **Root_NPC_Goblin_Ogre_Attack** interaction:
 
 ```json
-{ 
-	"Interactions": [
-		{
-			"Type": "Chaining",
-			"ChainId": "Slashes",
-			"ChainingAllowance": 15,
-			"Next": [
-				"Goblin_Ogre_Swing_Left",
-				"Goblin_Ogre_Swing_Right",
-				"Goblin_Ogre_Swing_Down"
-			]
-		}
-	],
-	"Tags": {
-		"Attack": [
-			"Melee"
-		]
-	}
+{
+  "Interactions": [
+    {
+      "Type": "Chaining",
+      "ChainId": "Slashes",
+      "ChainingAllowance": 15,
+      "Next": [
+        "Goblin_Ogre_Swing_Left",
+        "Goblin_Ogre_Swing_Right",
+        "Goblin_Ogre_Swing_Down"
+      ]
+    }
+  ],
+  "Tags": {
+    "Attack": ["Melee"]
+  }
 }
 ```
 
@@ -39,70 +37,70 @@ These swing interactions need to be created in the **HytaleAssets/Server/Item/In
 
 ```json
 {
-    "Type": "Simple",
-    "Effects": {
-        "ItemPlayerAnimationsId": "Goblin_Club",
-        "ItemAnimationId": "SwingLeft"
+  "Type": "Simple",
+  "Effects": {
+    "ItemPlayerAnimationsId": "Goblin_Club",
+    "ItemAnimationId": "SwingLeft"
+  },
+  "$Comment": "Prepare Delay",
+  "RunTime": 0.2,
+  "Next": {
+    "Type": "Selector",
+    "$Comment": "Length of Combat",
+    "RunTime": 0.25,
+    "Selector": {
+      "Id": "Horizontal",
+      "Direction": "ToLeft",
+      "TestLineOfSight": true,
+      "ExtendTop": 0.5,
+      "ExtendBottom": 2,
+      "StartDistance": 0.1,
+      "EndDistance": 3.5,
+      "Length": 60,
+      "RollOffset": 0,
+      "YawStartOffset": -30
     },
-    "$Comment": "Prepare Delay",
-    "RunTime": 0.2,
-    "Next": {
-            "Type": "Selector",
-            "$Comment": "Length of Combat",
-            "RunTime": 0.25,
-            "Selector": {
-                "Id": "Horizontal",
-                "Direction": "ToLeft",
-                "TestLineOfSight": true,
-                "ExtendTop": 0.5,
-                "ExtendBottom": 2,
-                "StartDistance": 0.1,
-                "EndDistance": 3.5,
-                "Length": 60,
-                "RollOffset": 0,
-                "YawStartOffset": -30
+    "HitEntity": {
+      "Interactions": [
+        {
+          "Parent": "DamageEntityParent",
+          "DamageCalculator": {
+            "BaseDamage": {
+              "Physical": 8
+            }
+          },
+          "DamageEffects": {
+            "Knockback": {
+              "Force": 0.5,
+              "RelativeX": -5,
+              "RelativeZ": -5,
+              "VelocityY": 5
             },
-            "HitEntity": {
-                "Interactions": [
-                    {
-                        "Parent": "DamageEntityParent",
-                        "DamageCalculator": {
-                            "BaseDamage": {
-                                "Physical": 8
-                            }
-                        },
-                        "DamageEffects": {
-                            "Knockback": {
-                                "Force": 0.5,
-                                "RelativeX": -5,
-                                "RelativeZ": -5,
-                                "VelocityY": 5
-                            },
-							"WorldSoundEventId": "SFX_Unarmed_Impact",
-							"WorldParticles": [
-								{
-									"SystemId": "Impact_Blade_01"
-								}
-							]
-                        }
-                    }
-                ]
-			},
-			"Next": {
-				"Type": "Simple",
-				"$Comment": "Pad the interaction length",
-				"RunTime": 0.1
-			}
-		}
+            "WorldSoundEventId": "SFX_Unarmed_Impact",
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Blade_01"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "Next": {
+      "Type": "Simple",
+      "$Comment": "Pad the interaction length",
+      "RunTime": 0.1
+    }
+  }
 }
 ```
 
 Now we need to approach the target and use our fancy attack sequence. Again, there are a few components that will make most of this much simpler to do:
 
-* `Component_Instruction_Soft_Leash` will work in conjunction with an external **ReturnHome** state to send the ogre back to his start point if we get him too far away.
-* `Component_Instruction_Intelligent_Chase` will handle smartly chasing the target based on its last known position and will trigger pathfinding where necessary. We might want to add an extra **Search** state for this.
+- `Component_Instruction_Soft_Leash` will work in conjunction with an external **ReturnHome** state to send the ogre back to his start point if we get him too far away.
+- `Component_Instruction_Intelligent_Chase` will handle smartly chasing the target based on its last known position and will trigger pathfinding where necessary. We might want to add an extra **Search** state for this.
 
-Let's create the states we need. First, Combat itself, but since we're going to be using `Component_Instruction_Intelligent_Chase`, this component needs to know where to switch when the Target is lost or if the NPC is too far away. Let's create two states: **Search** and **ReturnHome** that will be used there. 
+Let's create the states we need. First, Combat itself, but since we're going to be using `Component_Instruction_Intelligent_Chase`, this component needs to know where to switch when the Target is lost or if the NPC is too far away. Let's create two states: **Search** and **ReturnHome** that will be used there.
 
 ```json
 {
@@ -132,63 +130,63 @@ Let's start with chasing the target. We wrap that behavior in sub state **.Chase
 
 ```json
 {
-	"Sensor": {
-		"Type": "State",
-		"State": "Combat"
-	},
-	"Instructions": [
-		{
-			"Sensor": {
-				"Type": "State",
-				"State": ".Chase"
-			},
-			"Instructions": [
-				{
-					"Sensor": {
-						"Type": "Target",
-						"Range": { "Compute": "AttackDistance" },
-						"Filters": [
-							{
-								"Type": "LineOfSight"
-							}
-						]
-					},
-					"Actions": [
-						{
-							"Type": "State",
-							"State": ".Default"
-						}
-					]
-				},
-				{
-					"Reference": "Component_Instruction_Soft_Leash",
-					"Modify": {
-						"_ExportStates": ["ReturnHome"],
-						"LeashDistance": { "Compute": "LeashDistance" },
-						"LeashMinPlayerDistance": { "Compute": "LeashMinPlayerDistance" },
-						"LeashTimer": { "Compute": "LeashTimer" },
-						"HardLeashDistance": { "Compute": "HardLeashDistance" }
-					}
-				},
-				{
-					"Reference": "Component_Instruction_Intelligent_Chase",
-					"Modify": {
-						"_ExportStates": ["Search", "Search", "ReturnHome"],
-						"ViewRange": { "Compute": "AlertedRange * 2" },
-						"HearingRange": { "Compute": "HearingRange * 2" },
-						"StopDistance": 0.1,
-						"RelativeSpeed": 0.5
-					}
-				}
-			]
-		}
-	]
+  "Sensor": {
+    "Type": "State",
+    "State": "Combat"
+  },
+  "Instructions": [
+    {
+      "Sensor": {
+        "Type": "State",
+        "State": ".Chase"
+      },
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "Target",
+            "Range": { "Compute": "AttackDistance" },
+            "Filters": [
+              {
+                "Type": "LineOfSight"
+              }
+            ]
+          },
+          "Actions": [
+            {
+              "Type": "State",
+              "State": ".Default"
+            }
+          ]
+        },
+        {
+          "Reference": "Component_Instruction_Soft_Leash",
+          "Modify": {
+            "_ExportStates": ["ReturnHome"],
+            "LeashDistance": { "Compute": "LeashDistance" },
+            "LeashMinPlayerDistance": { "Compute": "LeashMinPlayerDistance" },
+            "LeashTimer": { "Compute": "LeashTimer" },
+            "HardLeashDistance": { "Compute": "HardLeashDistance" }
+          }
+        },
+        {
+          "Reference": "Component_Instruction_Intelligent_Chase",
+          "Modify": {
+            "_ExportStates": ["Search", "Search", "ReturnHome"],
+            "ViewRange": { "Compute": "AlertedRange * 2" },
+            "HearingRange": { "Compute": "HearingRange * 2" },
+            "StopDistance": 0.1,
+            "RelativeSpeed": 0.5
+          }
+        }
+      ]
+    }
+  ]
 }
 ```
 
-* First, it checks if the target is within AttackDistance. If so, we switch to the default combat state. 
-* If the NPC gets too far away from its leash position (often the spawn position), we use `Component_Instruction_Soft_Leash` to send it home. We put this sensor in front of the chase state so that we don't continue chasing if the leash kicks in. There's a **Leash Timer** on this component that decides when it's time to give up.
-* And finally the chase component itself, which performs 'intelligent' chasing of the target.
+- First, it checks if the target is within AttackDistance. If so, we switch to the default combat state.
+- If the NPC gets too far away from its leash position (often the spawn position), we use `Component_Instruction_Soft_Leash` to send it home. We put this sensor in front of the chase state so that we don't continue chasing if the leash kicks in. There's a **Leash Timer** on this component that decides when it's time to give up.
+- And finally the chase component itself, which performs 'intelligent' chasing of the target.
 
 When the Target is within the **AttackDistance**, we perform the attack, otherwise we switch to the chase state. Let's start with the case where the target is within a melee range.
 
@@ -358,121 +356,121 @@ The Search state makes use of `Component_Sensor_Lost_Target_Detection`.
 
 ```json
 {
-	"Sensor": {
-		"Type": "State",
-		"State": "Search"
-	},
-	"Instructions": [
-		{
-			"Sensor": {
-				"Type": "Damage",
-				"Combat": true,
-				"TargetSlot": "LockedTarget"
-			},
-			"Actions": [
-				{
-					"Type": "State",
-					"State": "Alerted"
-				}
-			]
-		},
-		{
-			"Instructions": [
-				{
-					"Sensor": {
-						"Reference": "Component_Sensor_Lost_Target_Detection",
-						"Modify": {
-							"ViewRange": { "Compute": "ViewRange" },
-							"ViewSector": { "Compute": "ViewSector" },
-							"HearingRange": { "Compute": "HearingRange" },
-							"AbsoluteDetectionRange": { "Compute": "AbsoluteDetectionRange" },
-							"TargetSlot": "LockedTarget"
-						}
-					},
-					"Actions": [
-						{
-							"Type": "State",
-							"State": "Combat"
-						}
-					]
-				},
-				{
-					"Sensor": {
-						"Reference": "Component_Sensor_Standard_Detection",
-						"Modify": {
-							"ViewRange": { "Compute": "ViewRange" },
-							"ViewSector": { "Compute": "ViewSector" },
-							"HearingRange": { "Compute": "HearingRange" },
-							"AbsoluteDetectionRange": { "Compute": "AbsoluteDetectionRange" },
-							"Attitudes": ["Hostile", "Neutral"]
-						}
-					},
-					"Actions": [
-						{
-							"Type": "State",
-							"State": "Alerted"
-						}
-					]
-				},
-				{
-					"BodyMotion": {
-						"Type": "Sequence",
-						"Motions": [
-							{
-								"Type": "Timer",
-								"Time": [3, 6],
-								"Motion": {
-									"Type": "Wander",
-									"MaxHeadingChange": 1,
-									"RelativeSpeed": 0.5
-								}
-							},
-							{
-								"Type": "Sequence",
-								"Looped": true,
-								"Motions": [
-									{
-										"Type": "Timer",
-										"Time": [3, 6],
-										"Motion": {
-											"Type": "WanderInCircle",
-											"Radius": 10,
-											"MaxHeading Change": 60,
-											"RelativeSpeed": 0.5
-										}
-									},
-									{
-										"Type": "Timer",
-										"Time": [2, 3],
-										"Motion": {
-											"Type": "Nothing"
-										}
-									}
-								]
-							}
-						]
-					},
-					"ActionsBlocking": true,
-					"Actions": [
-						{
-							"Type": "Timeout",
-							"Delay": [4, 5]
-						},
-						{
-							"Type": "State",
-							"State": "Idle"
-						}
-					]
-				}
-			]
-		}
-	]
+  "Sensor": {
+    "Type": "State",
+    "State": "Search"
+  },
+  "Instructions": [
+    {
+      "Sensor": {
+        "Type": "Damage",
+        "Combat": true,
+        "TargetSlot": "LockedTarget"
+      },
+      "Actions": [
+        {
+          "Type": "State",
+          "State": "Alerted"
+        }
+      ]
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Reference": "Component_Sensor_Lost_Target_Detection",
+            "Modify": {
+              "ViewRange": { "Compute": "ViewRange" },
+              "ViewSector": { "Compute": "ViewSector" },
+              "HearingRange": { "Compute": "HearingRange" },
+              "AbsoluteDetectionRange": { "Compute": "AbsoluteDetectionRange" },
+              "TargetSlot": "LockedTarget"
+            }
+          },
+          "Actions": [
+            {
+              "Type": "State",
+              "State": "Combat"
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Reference": "Component_Sensor_Standard_Detection",
+            "Modify": {
+              "ViewRange": { "Compute": "ViewRange" },
+              "ViewSector": { "Compute": "ViewSector" },
+              "HearingRange": { "Compute": "HearingRange" },
+              "AbsoluteDetectionRange": { "Compute": "AbsoluteDetectionRange" },
+              "Attitudes": ["Hostile", "Neutral"]
+            }
+          },
+          "Actions": [
+            {
+              "Type": "State",
+              "State": "Alerted"
+            }
+          ]
+        },
+        {
+          "BodyMotion": {
+            "Type": "Sequence",
+            "Motions": [
+              {
+                "Type": "Timer",
+                "Time": [3, 6],
+                "Motion": {
+                  "Type": "Wander",
+                  "MaxHeadingChange": 1,
+                  "RelativeSpeed": 0.5
+                }
+              },
+              {
+                "Type": "Sequence",
+                "Looped": true,
+                "Motions": [
+                  {
+                    "Type": "Timer",
+                    "Time": [3, 6],
+                    "Motion": {
+                      "Type": "WanderInCircle",
+                      "Radius": 10,
+                      "MaxHeading Change": 60,
+                      "RelativeSpeed": 0.5
+                    }
+                  },
+                  {
+                    "Type": "Timer",
+                    "Time": [2, 3],
+                    "Motion": {
+                      "Type": "Nothing"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "ActionsBlocking": true,
+          "Actions": [
+            {
+              "Type": "Timeout",
+              "Delay": [4, 5]
+            },
+            {
+              "Type": "State",
+              "State": "Idle"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 ```
 
 The search state will first check if there is incoming damage and will switch to the alerted state if so. If not it'll execute the next block of instructions using pre-existing components:
 
-* Check if the lost target is detected with the **Lost Target detection sensor**. If so, switch to combat.
-* Check if any other target is available through the **Standard detection sensor**. If so, switch to the alerted state.
-* Otherwise the NPC will move around using the **Wander** motion, stopping briefly in between until it gives up and...
-* ...goes back to being idle.
+- Check if the lost target is detected with the **Lost Target detection sensor**. If so, switch to combat.
+- Check if any other target is available through the **Standard detection sensor**. If so, switch to the alerted state.
+- Otherwise the NPC will move around using the **Wander** motion, stopping briefly in between until it gives up and...
+- ...goes back to being idle.

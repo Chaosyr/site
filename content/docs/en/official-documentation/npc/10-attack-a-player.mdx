@@ -13,19 +13,19 @@ First we'll just create the empty **Alerted** state after the **CallRat** state 
 
 ```json
 {
-	"Sensor": {
-		"Type": "State",
-		"State": "Alerted"
-	},
-	"Instructions": [
-		{
-			"Reference": "Component_Instruction_State_Timeout",
-			"Modify": {
-				"_ExportStates": ["Idle"],
-				"Delay": [10, 15]
-			}
-		}
-	]
+  "Sensor": {
+    "Type": "State",
+    "State": "Alerted"
+  },
+  "Instructions": [
+    {
+      "Reference": "Component_Instruction_State_Timeout",
+      "Modify": {
+        "_ExportStates": ["Idle"],
+        "Delay": [10, 15]
+      }
+    }
+  ]
 }
 ```
 
@@ -33,10 +33,10 @@ There are a number of good components for handling awareness checks. For this we
 
 ```json
 {
-	"Groups": {
-		"Friendly": ["Goblin"],
-		"Hostile": []
-	}
+  "Groups": {
+    "Friendly": ["Goblin"],
+    "Hostile": []
+  }
 }
 ```
 
@@ -94,9 +94,9 @@ This Sensor has a few other parameters, for example we can explicitly exclude NP
 
 Let's talk for a moment about how this works. The sensor has different checks:
 
-* First it checks if there is something in **absolute detection range**, then if nothing satisfies the filter, it checks further.
-* It then **checks if there is a potential target in ViewRange/Sector**. If there's a target within the view cone and range and there's an unobstructed line of sight to it, then we can 'see' it.
-* If the NPC couldn't see anything, it will **try to 'listen'.** This is a little more specific - if a target is walking or running and isn't crouching, we can 'hear' it, regardless of most other factors (though it won't 'hear' through walls). This makes it pretty perceptive, which is why we tend to use it with a much lower detection radius than the view range.
+- First it checks if there is something in **absolute detection range**, then if nothing satisfies the filter, it checks further.
+- It then **checks if there is a potential target in ViewRange/Sector**. If there's a target within the view cone and range and there's an unobstructed line of sight to it, then we can 'see' it.
+- If the NPC couldn't see anything, it will **try to 'listen'.** This is a little more specific - if a target is walking or running and isn't crouching, we can 'hear' it, regardless of most other factors (though it won't 'hear' through walls). This makes it pretty perceptive, which is why we tend to use it with a much lower detection radius than the view range.
 
 ```json
 {
@@ -150,32 +150,32 @@ Then we'll use the previous configuration for the **CallRat** state, but a modif
 
 ```json
 {
-	"Sensor": {
-		"Type": "State",
-		"State": "Sleep"
-	},
-	"Instructions": [
-		{
-			"$Comment": "Check for any hostile targets in range that could alert the NPC",
-			"Sensor": {
-				"Reference": "Component_Sensor_Standard_Detection",
-				"Modify": {
-					"ViewRange": { "Compute": "ViewRange / DistractedPenalty" },
-					"ViewSector": { "Compute": "ViewSector" },
-					"HearingRange": { "Compute": "ViewRange / DistractedPenalty" },
-					"ThroughWalls": false,
-					"AbsoluteDetectionRange": { "Compute": "AbsoluteDetectionRange" },
-					"Attitudes": ["Hostile"]
-				}
-			},
-			"Actions": [
-				{
-					"Type": "State",
-					"State": "Alerted"
-				}
-			]
-		}
-	]
+  "Sensor": {
+    "Type": "State",
+    "State": "Sleep"
+  },
+  "Instructions": [
+    {
+      "$Comment": "Check for any hostile targets in range that could alert the NPC",
+      "Sensor": {
+        "Reference": "Component_Sensor_Standard_Detection",
+        "Modify": {
+          "ViewRange": { "Compute": "ViewRange / DistractedPenalty" },
+          "ViewSector": { "Compute": "ViewSector" },
+          "HearingRange": { "Compute": "ViewRange / DistractedPenalty" },
+          "ThroughWalls": false,
+          "AbsoluteDetectionRange": { "Compute": "AbsoluteDetectionRange" },
+          "Attitudes": ["Hostile"]
+        }
+      },
+      "Actions": [
+        {
+          "Type": "State",
+          "State": "Alerted"
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -183,17 +183,15 @@ Here we can see a feature we haven't used before - the computed value actually e
 
 Now, regardless of state, the ogre can react to any threats! Next we'll flesh out the **Alerted** state a bit so it actually does what's required of it. Let's recap what that was:
 
-* Stand up if seated (this is covered by the state transitions already)
-* Roar, ordering nearby goblin scrappers to attack
-* Start slowly walking towards the player to attack (we'll consider this part of combat)
+- Stand up if seated (this is covered by the state transitions already)
+- Roar, ordering nearby goblin scrappers to attack
+- Start slowly walking towards the player to attack (we'll consider this part of combat)
 
 In that case, all we need to do here is make the ogre look at its target, play a roaring animation and maybe some particles, and send out a beacon to alert nearby goblin scrappers. First we need a quick **NPC group** (**Goblin_Scrapper**) to define goblin scrappers so that we send our beacon to them specifically.
 
 ```json
 {
-	"IncludeRoles": [
-		"Goblin_Scrapper"
-	]
+  "IncludeRoles": ["Goblin_Scrapper"]
 }
 ```
 
@@ -281,24 +279,24 @@ There's a fair bit of logic involved, but it's pretty straightforward. We play a
 
 ```json
 {
-	"States": [
-		{
-			"From": [],
-			"To": ["Combat"]
-		}
-	],
-	"Actions": [
-		{
-			"Type": "PlayAnimation",
-			"Slot": "Status"
-		},
-		{
-			"Type": "Beacon",
-			"Message": "Goblin_Ogre_Warn",
-			"TargetGroups": { "Compute": "WarnGroups" },
-			"SendTargetSlot": "LockedTarget"
-		}
-	]
+  "States": [
+    {
+      "From": [],
+      "To": ["Combat"]
+    }
+  ],
+  "Actions": [
+    {
+      "Type": "PlayAnimation",
+      "Slot": "Status"
+    },
+    {
+      "Type": "Beacon",
+      "Message": "Goblin_Ogre_Warn",
+      "TargetGroups": { "Compute": "WarnGroups" },
+      "SendTargetSlot": "LockedTarget"
+    }
+  ]
 }
 ```
 

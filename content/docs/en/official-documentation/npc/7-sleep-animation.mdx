@@ -13,34 +13,33 @@ The most basic part is playing the sleep animation. We can use a convenient comp
 
 ```json
 {
-	"Sensor": {
-		"Type": "State",
-		"State": "Sleep"
-	},
-	"Instructions": [
-		{
-			"Continue": true,
-			"ActionsBlocking": true,
-			"Actions": [
-				{
-					"Type": "Timeout",
-					"Delay": [5, 10]
-				},
-				{
-					"Type": "State",
-					"State": "Idle"
-				}
-			]
-		},
-		{
-			"Reference": "Component_Instruction_Play_Animation",
-			"Modify": {
-				"Animation": "Sleep"
-			}
-		}
-	]
+  "Sensor": {
+    "Type": "State",
+    "State": "Sleep"
+  },
+  "Instructions": [
+    {
+      "Continue": true,
+      "ActionsBlocking": true,
+      "Actions": [
+        {
+          "Type": "Timeout",
+          "Delay": [5, 10]
+        },
+        {
+          "Type": "State",
+          "State": "Idle"
+        }
+      ]
+    },
+    {
+      "Reference": "Component_Instruction_Play_Animation",
+      "Modify": {
+        "Animation": "Sleep"
+      }
+    }
+  ]
 }
-
 ```
 
 Wait...that's it?

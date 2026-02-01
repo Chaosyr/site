@@ -13,18 +13,18 @@ Now the real challenge begins! From here on out, it's critical to remember to te
 
 First, we have to figure out how we want to randomise these base idle behaviours. There are three we care about right now since they don't involve interacting with any other types of NPC:
 
-* Standing guard (we already did this!)
-* Napping for a while.
-* Going off to find some food.
+- Standing guard (we already did this!)
+- Napping for a while.
+- Going off to find some food.
 
 There are a few ways we can approach this, but we'll be using a Random Action to make the initial pick and then letting the individual behaviour control its length before resetting and picking a new one.
 
 With this in mind, we can see a minor error in our original judgement - the **Idle** state needs **four** substates, not three:
 
-* **.Default** (this now becomes an entry state for picking the random behaviour state to switch to)
-* **.Guard** (this is now our guarding state)
-* **.FindFood** (go search for some nearby food if it exists)
-* **.EatRat** (murder an innocent nearby rat - we ignore this for now since it relies on another NPC)
+- **.Default** (this now becomes an entry state for picking the random behaviour state to switch to)
+- **.Guard** (this is now our guarding state)
+- **.FindFood** (go search for some nearby food if it exists)
+- **.EatRat** (murder an innocent nearby rat - we ignore this for now since it relies on another NPC)
 
 So let's quickly refactor the existing **Idle** state to reflect this change, and add a **Random Action** that will, for now, only have a single option.
 
@@ -87,29 +87,29 @@ This is actually pretty simple; we'll just add an instruction with **ActionsBloc
 
 ```json
 {
-    "Sensor": {
-        "Type": "State",
-        "State": ".Guard"
-    },
-    "Instructions": [
+  "Sensor": {
+    "Type": "State",
+    "State": ".Guard"
+  },
+  "Instructions": [
+    {
+      "Continue": true,
+      "ActionsBlocking": true,
+      "Actions": [
         {
-            "Continue": true,
-            "ActionsBlocking": true,
-            "Actions": [
-                {
-                    "Type": "Timeout",
-                    "Delay": [15, 30]
-                },
-                {
-                    "Type": "State",
-                    "State": ".Default"
-                }
-            ]
+          "Type": "Timeout",
+          "Delay": [15, 30]
         },
         {
-            "Reference": "Component_Instruction_Intelligent_Idle_Motion_Follow_Path"
+          "Type": "State",
+          "State": ".Default"
         }
-    ]
+      ]
+    },
+    {
+      "Reference": "Component_Instruction_Intelligent_Idle_Motion_Follow_Path"
+    }
+  ]
 }
 ```
 
