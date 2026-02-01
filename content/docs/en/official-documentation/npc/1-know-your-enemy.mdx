@@ -37,22 +37,23 @@ This is also a strong suggestion to take a look through the NPC core element doc
 
 The Goblin Ogre isn't too complicated in this regard. We start with the main top-level states:
 
-* An **Idle** state where it mostly remains stationary at a specific point.
-    * This can also encompass its general 'observed' flavour actions.
-    * In many cases, we can include some inter-NPC behaviours here too, unless they require a more complex sequence of actions.
-* A **Sleep** state.
-    * Sleep states are often best kept separate from the idle state, both to take advantage of mechanisms for handling the transition from the state to others (e.g. playing wake up animations) and to accommodate slight changes to the NPC's detection capabilities.
-* An **Eat** state.
-    * With the same reasoning as Sleep.
-* An **Alerted** state.
-    * Almost all NPCs end up having one of these in some form, though they often vary a bit in their intent.
-* A **Combat** state.
-    * While not always the case, it often makes sense to roll all combat into a single distinct state.
-* A **ReturnHome** state.
-    * This applies particularly to NPCs that have stationary guard points.
-    * Essentially handles getting them home again.
+- An **Idle** state where it mostly remains stationary at a specific point.
+  - This can also encompass its general 'observed' flavour actions.
+  - In many cases, we can include some inter-NPC behaviours here too, unless they require a more complex sequence of actions.
+- A **Sleep** state.
+  - Sleep states are often best kept separate from the idle state, both to take advantage of mechanisms for handling the transition from the state to others (e.g. playing wake up animations) and to accommodate slight changes to the NPC's detection capabilities.
+- An **Eat** state.
+  - With the same reasoning as Sleep.
+- An **Alerted** state.
+  - Almost all NPCs end up having one of these in some form, though they often vary a bit in their intent.
+- A **Combat** state.
+  - While not always the case, it often makes sense to roll all combat into a single distinct state.
+- A **ReturnHome** state.
+  - This applies particularly to NPCs that have stationary guard points.
+  - Essentially handles getting them home again.
 
-Some of these might break down into a set of additional substates handling individual parts of the behavioural logic. For example, 
+Some of these might break down into a set of additional substates handling individual parts of the behavioural logic. For example,
+
 - **Idle**
   - **.Default** (stand guard and do nothing else)
   - **.FindFood** (go search for some nearby food if it exists)
@@ -60,14 +61,14 @@ Some of these might break down into a set of additional substates handling indiv
 
 Now we have a rough idea of how this NPC is going to be structured at the highest level. With this in mind, we can also see some potential for **state transitions** that make sense.
 
-* **Any State -> Sleep**
-    * Play a laydown animation
-* **Sleep -> Any State**
-    * Play a get up animation
-* **Any State -> Eat**
-    * Prepare items for eating
-* **Eat -> Any State**
-    * Pull out weapons again
+- **Any State -> Sleep**
+  - Play a laydown animation
+- **Sleep -> Any State**
+  - Play a get up animation
+- **Any State -> Eat**
+  - Prepare items for eating
+- **Eat -> Any State**
+  - Pull out weapons again
 
 These particular state transitions are pretty generic and commonly used, but at this stage, I don't see the need for any others.
 
@@ -75,10 +76,10 @@ These particular state transitions are pretty generic and commonly used, but at 
 
 Straight away, there are a few pre-existing components that will make our lives significantly easier.
 
-* We need to chase and attack other targets.
-    * `Component_Instruction_Intelligent_Chase` is built for exactly this purpose and abstracts away a lot of complicated logic needed to make an NPC smartly try to track down a target based on its last seen position.
-    * `Component_Sensor_Standard_Detection` will help setting up NPC senses, like vision and hearing.
-    * `Component_Instruction_Soft_Leash` will make sure the ogre doesn't chase its target to the far reaches of Orbis and will eventually give up if the player is just running away.
+- We need to chase and attack other targets.
+  - `Component_Instruction_Intelligent_Chase` is built for exactly this purpose and abstracts away a lot of complicated logic needed to make an NPC smartly try to track down a target based on its last seen position.
+  - `Component_Sensor_Standard_Detection` will help setting up NPC senses, like vision and hearing.
+  - `Component_Instruction_Soft_Leash` will make sure the ogre doesn't chase its target to the far reaches of Orbis and will eventually give up if the player is just running away.
 
 These will handle a chunk of our generic combat logic. We also need to add supporting files, like an **Appearance** file that describes what model and animations are to be used and an **Attack Interaction** for combat.
 
